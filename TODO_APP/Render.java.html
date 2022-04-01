@@ -1,0 +1,498 @@
+<html>
+<head>
+<title>Render.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #0033b3;}
+.s1 { color: #080808;}
+.s2 { color: #8c8c8c; font-style: italic;}
+.s3 { color: #067d17;}
+.s4 { color: #1750eb;}
+</style>
+</head>
+<body bgcolor="#ffffff">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#c0c0c0" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+Render.java</font>
+</center></td></tr></table>
+<pre><span class="s0">import </span><span class="s1">javafx.application.Application;</span>
+<span class="s0">import </span><span class="s1">javafx.collections.FXCollections;</span>
+<span class="s0">import </span><span class="s1">javafx.collections.ObservableList;</span>
+<span class="s0">import </span><span class="s1">javafx.event.ActionEvent;</span>
+<span class="s0">import </span><span class="s1">javafx.event.EventHandler;</span>
+<span class="s0">import </span><span class="s1">javafx.scene.Group;</span>
+<span class="s0">import </span><span class="s1">javafx.scene.Scene;</span>
+<span class="s0">import </span><span class="s1">javafx.scene.canvas.Canvas;</span>
+<span class="s0">import </span><span class="s1">javafx.scene.canvas.GraphicsContext;</span>
+<span class="s0">import </span><span class="s1">javafx.scene.control.Button;</span>
+<span class="s0">import </span><span class="s1">javafx.scene.control.Menu;</span>
+<span class="s0">import </span><span class="s1">javafx.scene.control.MenuBar;</span>
+<span class="s0">import </span><span class="s1">javafx.scene.control.MenuItem;</span>
+<span class="s0">import </span><span class="s1">javafx.scene.control.TextField;</span>
+<span class="s0">import </span><span class="s1">javafx.scene.control.cell.PropertyValueFactory;</span>
+<span class="s0">import </span><span class="s1">javafx.scene.image.Image;</span>
+<span class="s0">import </span><span class="s1">javafx.scene.input.MouseEvent;</span>
+<span class="s0">import </span><span class="s1">javafx.scene.paint.Color;</span>
+<span class="s0">import </span><span class="s1">javafx.scene.text.Font;</span>
+<span class="s0">import </span><span class="s1">javafx.scene.text.FontWeight;</span>
+<span class="s0">import </span><span class="s1">javafx.stage.FileChooser;</span>
+<span class="s0">import </span><span class="s1">javafx.stage.Stage;</span>
+<span class="s0">import </span><span class="s1">javafx.geometry.Insets;</span>
+<span class="s0">import </span><span class="s1">javafx.scene.control.*;</span>
+<span class="s0">import </span><span class="s1">javafx.scene.control.cell.TextFieldTableCell;</span>
+<span class="s0">import </span><span class="s1">javafx.scene.layout.*;</span>
+<span class="s0">import </span><span class="s1">java.awt.*;</span>
+<span class="s0">import </span><span class="s1">java.io.BufferedWriter;</span>
+<span class="s0">import </span><span class="s1">java.io.File;</span>
+<span class="s0">import </span><span class="s1">java.io.IOException;</span>
+<span class="s0">import </span><span class="s1">java.io.PrintWriter;</span>
+<span class="s0">import </span><span class="s1">java.time.LocalDate;</span>
+<span class="s0">import </span><span class="s1">java.time.format.DateTimeFormatter;</span>
+<span class="s0">import </span><span class="s1">java.util.logging.Level;</span>
+<span class="s0">import </span><span class="s1">java.util.logging.Logger;</span>
+
+
+<span class="s0">public class </span><span class="s1">Render  </span><span class="s0">extends </span><span class="s1">Application {</span>
+    <span class="s1">String namePage; </span><span class="s2">// name est utiliser pour afficher le mois sur le stage starttodo</span>
+    <span class="s1">Image ArPlan; </span><span class="s2">// les images en arriere plan pour les stages</span>
+
+    <span class="s0">public void </span><span class="s1">startMois(Stage theStageMois) {</span>
+        <span class="s1">theStageMois.hide();</span>
+        <span class="s1">theStageMois.setTitle(</span><span class="s3">&quot;Task management tool 1.0&quot;</span><span class="s1">);</span>
+        <span class="s2">//creation canvas</span>
+        <span class="s1">Group root = </span><span class="s0">new </span><span class="s1">Group();</span>
+        <span class="s1">Scene theScene = </span><span class="s0">new </span><span class="s1">Scene(root);</span>
+        <span class="s1">theStageMois.setScene(theScene);</span>
+        <span class="s1">Canvas canvas = </span><span class="s0">new </span><span class="s1">Canvas(</span><span class="s4">423</span><span class="s1">, </span><span class="s4">699</span><span class="s1">);</span>
+        <span class="s1">root.getChildren().add(canvas);</span>
+        <span class="s1">GraphicsContext gc = canvas.getGraphicsContext2D();</span>
+        <span class="s1">ArPlan = </span><span class="s0">new </span><span class="s1">Image( </span><span class="s3">&quot;Moistodo.png&quot; </span><span class="s1">);</span>
+        <span class="s1">gc.drawImage( ArPlan, </span><span class="s4">0</span><span class="s1">, </span><span class="s4">0 </span><span class="s1">);</span>
+
+        <span class="s2">//creer un boutton pour le mois de janvier</span>
+        <span class="s1">Button button_janvier = </span><span class="s0">new </span><span class="s1">Button(</span><span class="s3">&quot;January&quot;</span><span class="s1">);</span>
+        <span class="s1">root.getChildren().add(button_janvier);</span>
+        <span class="s1">button_janvier.setTranslateX(</span><span class="s4">61</span><span class="s1">);</span>
+        <span class="s1">button_janvier.setTranslateY(</span><span class="s4">107</span><span class="s1">);</span>
+        <span class="s1">button_janvier.setOnMouseClicked(</span><span class="s0">new </span><span class="s1">EventHandler&lt;MouseEvent&gt;() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">handle(MouseEvent mouseEvent) {</span>
+                <span class="s1">namePage=</span><span class="s3">&quot;January&quot;</span><span class="s1">;</span>
+                <span class="s1">startTodo(theStageMois);</span>
+            <span class="s1">}</span>
+        <span class="s1">});</span>
+        <span class="s2">////creer un boutton pour le mois de fevrier</span>
+        <span class="s1">Button button_fevrier = </span><span class="s0">new </span><span class="s1">Button(</span><span class="s3">&quot;February&quot;</span><span class="s1">);</span>
+        <span class="s1">root.getChildren().add(button_fevrier);</span>
+        <span class="s1">button_fevrier.setTranslateX(</span><span class="s4">189</span><span class="s1">);</span>
+        <span class="s1">button_fevrier.setTranslateY(</span><span class="s4">107</span><span class="s1">);</span>
+        <span class="s1">button_fevrier.setOnMouseClicked(</span><span class="s0">new </span><span class="s1">EventHandler&lt;MouseEvent&gt;() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">handle(MouseEvent mouseEvent) {</span>
+                <span class="s1">namePage=</span><span class="s3">&quot;February&quot;</span><span class="s1">;</span>
+                <span class="s1">startTodo(theStageMois);</span>
+            <span class="s1">}</span>
+        <span class="s1">});</span>
+        <span class="s2">//creer un boutton pour le mois de Mars</span>
+        <span class="s1">Button button_Mars = </span><span class="s0">new </span><span class="s1">Button(</span><span class="s3">&quot;March&quot;</span><span class="s1">);</span>
+        <span class="s1">root.getChildren().add(button_Mars);</span>
+        <span class="s1">button_Mars.setTranslateX(</span><span class="s4">318</span><span class="s1">);</span>
+        <span class="s1">button_Mars.setTranslateY(</span><span class="s4">107</span><span class="s1">);</span>
+        <span class="s1">button_Mars.setOnMouseClicked(</span><span class="s0">new </span><span class="s1">EventHandler&lt;MouseEvent&gt;() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">handle(MouseEvent mouseEvent) {</span>
+                <span class="s1">namePage=</span><span class="s3">&quot;March&quot;</span><span class="s1">;</span>
+                <span class="s1">startTodo(theStageMois);</span>
+            <span class="s1">}</span>
+        <span class="s1">});</span>
+        <span class="s2">//creer un boutton pour le mois d'arvil</span>
+        <span class="s1">Button button_Avril = </span><span class="s0">new </span><span class="s1">Button(</span><span class="s3">&quot;April&quot;</span><span class="s1">);</span>
+        <span class="s1">root.getChildren().add(button_Avril);</span>
+        <span class="s1">button_Avril.setTranslateX(</span><span class="s4">61</span><span class="s1">);</span>
+        <span class="s1">button_Avril.setTranslateY(</span><span class="s4">250</span><span class="s1">);</span>
+        <span class="s1">button_Avril.setOnMouseClicked(</span><span class="s0">new </span><span class="s1">EventHandler&lt;MouseEvent&gt;() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">handle(MouseEvent mouseEvent) {</span>
+                <span class="s1">namePage=</span><span class="s3">&quot;April&quot;</span><span class="s1">;</span>
+                <span class="s1">startTodo(theStageMois);</span>
+            <span class="s1">}</span>
+        <span class="s1">});</span>
+        <span class="s2">//creer un boutton pour le mois de mai</span>
+        <span class="s1">Button button_Mai = </span><span class="s0">new </span><span class="s1">Button(</span><span class="s3">&quot;May&quot;</span><span class="s1">);</span>
+        <span class="s1">root.getChildren().add(button_Mai);</span>
+        <span class="s1">button_Mai.setTranslateX(</span><span class="s4">189</span><span class="s1">);</span>
+        <span class="s1">button_Mai.setTranslateY(</span><span class="s4">250</span><span class="s1">);</span>
+        <span class="s1">button_Mai.setOnMouseClicked(</span><span class="s0">new </span><span class="s1">EventHandler&lt;MouseEvent&gt;() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">handle(MouseEvent mouseEvent) {</span>
+                <span class="s1">namePage=</span><span class="s3">&quot;May&quot;</span><span class="s1">;</span>
+                <span class="s1">startTodo(theStageMois);</span>
+            <span class="s1">}</span>
+        <span class="s1">});</span>
+        <span class="s2">//creer un boutton pour le mois de juin</span>
+        <span class="s1">Button button_Juin = </span><span class="s0">new </span><span class="s1">Button(</span><span class="s3">&quot;June&quot;</span><span class="s1">);</span>
+        <span class="s1">root.getChildren().add(button_Juin);</span>
+        <span class="s1">button_Juin.setTranslateX(</span><span class="s4">318</span><span class="s1">);</span>
+        <span class="s1">button_Juin.setTranslateY(</span><span class="s4">250</span><span class="s1">);</span>
+        <span class="s1">button_Juin.setOnMouseClicked(</span><span class="s0">new </span><span class="s1">EventHandler&lt;MouseEvent&gt;() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">handle(MouseEvent mouseEvent) {</span>
+                <span class="s1">namePage=</span><span class="s3">&quot;June&quot;</span><span class="s1">;</span>
+                <span class="s1">startTodo(theStageMois);</span>
+            <span class="s1">}</span>
+        <span class="s1">});</span>
+        <span class="s2">//creer un boutton pour le mois de juillet</span>
+        <span class="s1">Button button_Juillet = </span><span class="s0">new </span><span class="s1">Button(</span><span class="s3">&quot;July&quot;</span><span class="s1">);</span>
+        <span class="s1">root.getChildren().add(button_Juillet);</span>
+        <span class="s1">button_Juillet.setTranslateX(</span><span class="s4">61</span><span class="s1">);</span>
+        <span class="s1">button_Juillet.setTranslateY(</span><span class="s4">396</span><span class="s1">);</span>
+        <span class="s1">button_Juillet.setOnMouseClicked(</span><span class="s0">new </span><span class="s1">EventHandler&lt;MouseEvent&gt;() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">handle(MouseEvent mouseEvent) {</span>
+                <span class="s1">namePage=</span><span class="s3">&quot;July&quot;</span><span class="s1">;</span>
+                <span class="s1">startTodo(theStageMois);</span>
+            <span class="s1">}</span>
+        <span class="s1">});</span>
+        <span class="s2">//creer un boutton pour le mois de aout</span>
+        <span class="s1">Button button_Aout = </span><span class="s0">new </span><span class="s1">Button(</span><span class="s3">&quot;August&quot;</span><span class="s1">);</span>
+        <span class="s1">root.getChildren().add(button_Aout);</span>
+        <span class="s1">button_Aout.setTranslateX(</span><span class="s4">189</span><span class="s1">);</span>
+        <span class="s1">button_Aout.setTranslateY(</span><span class="s4">396</span><span class="s1">);</span>
+        <span class="s1">button_Aout.setOnMouseClicked(</span><span class="s0">new </span><span class="s1">EventHandler&lt;MouseEvent&gt;() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">handle(MouseEvent mouseEvent) {</span>
+                <span class="s1">namePage=</span><span class="s3">&quot;August&quot;</span><span class="s1">;</span>
+                <span class="s1">startTodo(theStageMois);</span>
+            <span class="s1">}</span>
+        <span class="s1">});</span>
+        <span class="s2">//creer un boutton pour le mois de septembre</span>
+        <span class="s1">Button button_Septembre = </span><span class="s0">new </span><span class="s1">Button(</span><span class="s3">&quot;September&quot;</span><span class="s1">);</span>
+        <span class="s1">root.getChildren().add(button_Septembre);</span>
+        <span class="s1">button_Septembre.setTranslateX(</span><span class="s4">309</span><span class="s1">);</span>
+        <span class="s1">button_Septembre.setTranslateY(</span><span class="s4">396</span><span class="s1">);</span>
+        <span class="s1">button_Septembre.setOnMouseClicked(</span><span class="s0">new </span><span class="s1">EventHandler&lt;MouseEvent&gt;() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">handle(MouseEvent mouseEvent) {</span>
+                <span class="s1">namePage=</span><span class="s3">&quot;September&quot;</span><span class="s1">;</span>
+                <span class="s1">startTodo(theStageMois);</span>
+            <span class="s1">}</span>
+        <span class="s1">});</span>
+        <span class="s2">//creer un boutton pour le mois de octobre</span>
+        <span class="s1">Button button_Octobre = </span><span class="s0">new </span><span class="s1">Button(</span><span class="s3">&quot;October&quot;</span><span class="s1">);</span>
+        <span class="s1">root.getChildren().add(button_Octobre);</span>
+        <span class="s1">button_Octobre.setTranslateX(</span><span class="s4">61</span><span class="s1">);</span>
+        <span class="s1">button_Octobre.setTranslateY(</span><span class="s4">540</span><span class="s1">);</span>
+        <span class="s1">button_Octobre.setOnMouseClicked(</span><span class="s0">new </span><span class="s1">EventHandler&lt;MouseEvent&gt;() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">handle(MouseEvent mouseEvent) {</span>
+                <span class="s1">namePage=</span><span class="s3">&quot;October&quot;</span><span class="s1">;</span>
+                <span class="s1">startTodo(theStageMois);</span>
+            <span class="s1">}</span>
+        <span class="s1">});</span>
+        <span class="s2">//creer un boutton pour le mois de novembre</span>
+        <span class="s1">Button button_Novembre = </span><span class="s0">new </span><span class="s1">Button(</span><span class="s3">&quot;November&quot;</span><span class="s1">);</span>
+        <span class="s1">root.getChildren().add(button_Novembre);</span>
+        <span class="s1">button_Novembre.setTranslateX(</span><span class="s4">185</span><span class="s1">);</span>
+        <span class="s1">button_Novembre.setTranslateY(</span><span class="s4">540</span><span class="s1">);</span>
+        <span class="s1">button_Novembre.setOnMouseClicked(</span><span class="s0">new </span><span class="s1">EventHandler&lt;MouseEvent&gt;() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">handle(MouseEvent mouseEvent) {</span>
+                <span class="s1">namePage=</span><span class="s3">&quot;November&quot;</span><span class="s1">;</span>
+                <span class="s1">startTodo(theStageMois);</span>
+            <span class="s1">}</span>
+        <span class="s1">});</span>
+        <span class="s2">//creer un boutton pour le mois de decembre</span>
+        <span class="s1">Button button_Decembre = </span><span class="s0">new </span><span class="s1">Button(</span><span class="s3">&quot;December&quot;</span><span class="s1">);</span>
+        <span class="s1">root.getChildren().add(button_Decembre);</span>
+        <span class="s1">button_Decembre.setTranslateX(</span><span class="s4">310</span><span class="s1">);</span>
+        <span class="s1">button_Decembre.setTranslateY(</span><span class="s4">540</span><span class="s1">);</span>
+        <span class="s1">button_Decembre.setOnMouseClicked(</span><span class="s0">new </span><span class="s1">EventHandler&lt;MouseEvent&gt;() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">handle(MouseEvent mouseEvent) {</span>
+                <span class="s1">namePage=</span><span class="s3">&quot;December&quot;</span><span class="s1">;</span>
+                <span class="s1">startTodo(theStageMois);</span>
+            <span class="s1">}</span>
+        <span class="s1">});</span>
+
+        <span class="s2">// Creation du boutton pour ajouter une liste des taches</span>
+        <span class="s1">Button button_addList = </span><span class="s0">new </span><span class="s1">Button(</span><span class="s3">&quot;Add List&quot;</span><span class="s1">);</span>
+        <span class="s1">root.getChildren().add(button_addList);</span>
+        <span class="s1">button_addList.setTranslateX(</span><span class="s4">27</span><span class="s1">);</span>
+        <span class="s1">button_addList.setTranslateY(</span><span class="s4">21</span><span class="s1">);</span>
+        <span class="s1">button_addList.setOnMouseClicked(</span><span class="s0">new </span><span class="s1">EventHandler&lt;MouseEvent&gt;() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">handle(MouseEvent mouseEvent) {</span>
+                <span class="s1">popStage();</span>
+            <span class="s1">}</span>
+        <span class="s1">});</span>
+
+        <span class="s1">theStageMois.show();</span>
+    <span class="s1">}</span>
+    <span class="s0">public void </span><span class="s1">startTodo(Stage TheStageTodo) {</span>
+        <span class="s1">TheStageTodo.hide();</span>
+        <span class="s1">TheStageTodo.setTitle(</span><span class="s3">&quot;Task management tool 1.0&quot;</span><span class="s1">);</span>
+        <span class="s1">Group root = </span><span class="s0">new </span><span class="s1">Group();</span>
+        <span class="s1">Scene theScene = </span><span class="s0">new </span><span class="s1">Scene(root);</span>
+        <span class="s1">TheStageTodo.setScene(theScene);</span>
+        <span class="s1">Canvas canvas = </span><span class="s0">new </span><span class="s1">Canvas(</span><span class="s4">423</span><span class="s1">, </span><span class="s4">699</span><span class="s1">);</span>
+        <span class="s1">root.getChildren().add(canvas);</span>
+        <span class="s1">GraphicsContext gc = canvas.getGraphicsContext2D();</span>
+        <span class="s1">ArPlan = </span><span class="s0">new </span><span class="s1">Image( </span><span class="s3">&quot;page_vide.png&quot; </span><span class="s1">);</span>
+        <span class="s1">gc.drawImage( ArPlan, </span><span class="s4">0</span><span class="s1">, </span><span class="s4">0 </span><span class="s1">);</span>
+        <span class="s2">//titre de la page de chaque mois</span>
+        <span class="s1">gc.setFill( Color.PURPLE );</span>
+        <span class="s1">gc.setStroke( Color.BLACK );</span>
+        <span class="s1">gc.setLineWidth(</span><span class="s4">2</span><span class="s1">);</span>
+        <span class="s1">Font theFont = Font.font( </span><span class="s3">&quot;Garamond&quot;</span><span class="s1">, FontWeight.BOLD, </span><span class="s4">38 </span><span class="s1">);</span>
+        <span class="s1">gc.setFont(theFont);</span>
+        <span class="s1">gc.strokeText( namePage,</span><span class="s4">150</span><span class="s1">, </span><span class="s4">65 </span><span class="s1">);</span>
+        <span class="s1">gc.fillText(namePage, </span><span class="s4">151</span><span class="s1">, </span><span class="s4">66</span><span class="s1">);</span>
+        <span class="s2">// name page change en cliquant sur les boutons de mois</span>
+        <span class="s2">// creation de boutton pour retourner a la page principale.</span>
+        <span class="s1">Button button_Retour = </span><span class="s0">new </span><span class="s1">Button(</span><span class="s3">&quot;Back&quot;</span><span class="s1">);</span>
+        <span class="s1">root.getChildren().add(button_Retour);</span>
+        <span class="s1">button_Retour.setTranslateX(</span><span class="s4">25</span><span class="s1">);</span>
+        <span class="s1">button_Retour.setTranslateY(</span><span class="s4">18</span><span class="s1">);</span>
+        <span class="s1">button_Retour.setOnMouseClicked(</span><span class="s0">new </span><span class="s1">EventHandler&lt;MouseEvent&gt;() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">handle(MouseEvent mouseEvent) {</span>
+                <span class="s1">startMois(TheStageTodo);</span>
+            <span class="s1">}</span>
+        <span class="s1">});</span>
+
+        <span class="s1">TheStageTodo.show();</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">public void </span><span class="s1">start(Stage stage) {</span>
+        <span class="s1">stage.hide();</span>
+        <span class="s1">stage.setTitle(</span><span class="s3">&quot;Task management tool 1.0&quot;</span><span class="s1">);</span>
+        <span class="s1">Group root = </span><span class="s0">new </span><span class="s1">Group();</span>
+        <span class="s1">Scene theScene = </span><span class="s0">new </span><span class="s1">Scene(root);</span>
+        <span class="s1">stage.setScene(theScene);</span>
+        <span class="s1">Canvas canvas = </span><span class="s0">new </span><span class="s1">Canvas(</span><span class="s4">423</span><span class="s1">, </span><span class="s4">699</span><span class="s1">);</span>
+        <span class="s1">root.getChildren().add(canvas);</span>
+        <span class="s1">GraphicsContext gc = canvas.getGraphicsContext2D();</span>
+        <span class="s1">ArPlan = </span><span class="s0">new </span><span class="s1">Image( </span><span class="s3">&quot;startpa.png&quot; </span><span class="s1">);</span>
+        <span class="s1">gc.drawImage( ArPlan, </span><span class="s4">0</span><span class="s1">, </span><span class="s4">0 </span><span class="s1">);</span>
+        <span class="s1">theScene.setOnMouseClicked(</span><span class="s0">new </span><span class="s1">EventHandler&lt;MouseEvent&gt;() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">handle(MouseEvent mouseEvent) {</span>
+                <span class="s1">startMois(stage);</span>
+            <span class="s1">}</span>
+        <span class="s1">});</span>
+
+        <span class="s1">stage.show();</span>
+    <span class="s1">}</span>
+
+
+    <span class="s0">private static </span><span class="s1">Desktop desktop = Desktop.getDesktop();</span>
+
+    <span class="s0">public static void </span><span class="s1">popStage() {</span>
+
+        <span class="s1">Stage newStage = </span><span class="s0">new </span><span class="s1">Stage();</span>
+
+        <span class="s0">final </span><span class="s1">FileChooser fileChooser = </span><span class="s0">new </span><span class="s1">FileChooser();</span>
+
+
+        <span class="s1">VBox vBox1 = </span><span class="s0">new </span><span class="s1">VBox(); </span><span class="s2">// Creer une box verticale.</span>
+        <span class="s1">Scene scene1 = </span><span class="s0">new </span><span class="s1">Scene(vBox1);</span>
+        <span class="s1">vBox1.setSpacing(</span><span class="s4">1</span><span class="s1">); </span><span class="s2">// l'espace entre les box</span>
+
+        <span class="s2">// Creer une box horizontale.</span>
+        <span class="s1">HBox hbox1 = </span><span class="s0">new </span><span class="s1">HBox();</span>
+        <span class="s1">hbox1.setSpacing(</span><span class="s4">8</span><span class="s1">);</span>
+        <span class="s1">hbox1.setPadding(</span><span class="s0">new </span><span class="s1">Insets(</span><span class="s4">10</span><span class="s1">, </span><span class="s4">10</span><span class="s1">, </span><span class="s4">10</span><span class="s1">, </span><span class="s4">10</span><span class="s1">));</span>
+
+
+         <span class="s2">//On cree une tabletri (TableView) pour pouvoir ajouter, supprimer et modifier nos taches</span>
+        <span class="s0">final </span><span class="s1">TableView&lt;TacheDO.Task&gt; tabletri = </span><span class="s0">new </span><span class="s1">TableView&lt;TacheDO.Task&gt;();</span>
+        <span class="s0">final </span><span class="s1">ObservableList&lt;TacheDO.Task&gt; data = FXCollections.observableArrayList(</span>
+                <span class="s0">new </span><span class="s1">TacheDO.Task(</span><span class="s3">&quot;01-03-2022&quot;</span><span class="s1">, </span><span class="s3">&quot;exemple tache&quot;</span><span class="s1">, </span><span class="s3">&quot;15/04/2022&quot;</span><span class="s1">, </span><span class="s3">&quot;high&quot;</span><span class="s1">, </span><span class="s3">&quot;tom21&quot;</span><span class="s1">));</span>
+
+        <span class="s1">tabletri.setEditable(</span><span class="s0">true</span><span class="s1">); </span><span class="s2">//Permet d'ajouter et modifier du texte dans les cases de ma table</span>
+
+        <span class="s2">// Nommer les colonnes de la tabletri.</span>
+        <span class="s1">TableColumn dayCol = </span><span class="s0">new </span><span class="s1">TableColumn(</span><span class="s3">&quot;Day&quot;</span><span class="s1">);</span>
+        <span class="s1">TableColumn descriptionCol = </span><span class="s0">new </span><span class="s1">TableColumn(</span><span class="s3">&quot;Description&quot;</span><span class="s1">);</span>
+        <span class="s1">TableColumn deadlineCol = </span><span class="s0">new </span><span class="s1">TableColumn(</span><span class="s3">&quot;Deadline&quot;</span><span class="s1">);</span>
+        <span class="s1">TableColumn priorityCol = </span><span class="s0">new </span><span class="s1">TableColumn(</span><span class="s3">&quot;Priority&quot;</span><span class="s1">);</span>
+        <span class="s1">TableColumn shareCol = </span><span class="s0">new </span><span class="s1">TableColumn(</span><span class="s3">&quot;Share With&quot;</span><span class="s1">);</span>
+
+
+        <span class="s2">// setCellValueFactory : Ajouter et remplir toutes les cellules dans ma table, fournit une instance de cette derniere.</span>
+        <span class="s2">// Permet que les mises à jour immédiates de la valeur soient reflétées à l'écran.</span>
+        <span class="s1">dayCol.setCellValueFactory(</span><span class="s0">new </span><span class="s1">PropertyValueFactory&lt;TacheDO.Task, String&gt;(</span><span class="s3">&quot;Day&quot;</span><span class="s1">));</span>
+        <span class="s1">dayCol.setCellFactory(TextFieldTableCell.forTableColumn());</span>
+        <span class="s1">dayCol.setOnEditCommit(</span><span class="s0">new </span><span class="s1">EventHandler&lt;TableColumn.CellEditEvent&lt;TacheDO.Task, String&gt;&gt;() {</span>
+                    <span class="s1">@Override</span>
+                    <span class="s0">public void </span><span class="s1">handle(TableColumn.CellEditEvent&lt;TacheDO.Task, String&gt; t) {</span>
+                        <span class="s1">((TacheDO.Task) t.getTableView().getItems().get(t.getTablePosition().getRow())).setDay(t.getNewValue());</span>
+                    <span class="s1">}</span>
+                <span class="s1">}</span>
+        <span class="s1">);</span>
+
+
+        <span class="s1">deadlineCol.setCellValueFactory(</span><span class="s0">new </span><span class="s1">PropertyValueFactory&lt;TacheDO.Task, String&gt;(</span><span class="s3">&quot;Deadline&quot;</span><span class="s1">));</span>
+        <span class="s1">deadlineCol.setCellFactory(TextFieldTableCell.forTableColumn());</span>
+        <span class="s1">deadlineCol.setOnEditCommit(</span><span class="s0">new </span><span class="s1">EventHandler&lt;TableColumn.CellEditEvent&lt;TacheDO.Task, String&gt;&gt;() {</span>
+                    <span class="s1">@Override</span>
+                    <span class="s0">public void </span><span class="s1">handle(TableColumn.CellEditEvent&lt;TacheDO.Task, String&gt; t) {</span>
+                        <span class="s1">((TacheDO.Task) t.getTableView().getItems().get(t.getTablePosition().getRow())).setDeadline(t.getNewValue());</span>
+                    <span class="s1">}</span>
+                <span class="s1">}</span>
+        <span class="s1">);</span>
+        <span class="s1">descriptionCol.setCellValueFactory(</span><span class="s0">new </span><span class="s1">PropertyValueFactory&lt;TacheDO.Task, String&gt;(</span><span class="s3">&quot;Description&quot;</span><span class="s1">));</span>
+        <span class="s1">descriptionCol.setCellFactory(TextFieldTableCell.forTableColumn());</span>
+        <span class="s1">descriptionCol.setOnEditCommit(</span><span class="s0">new </span><span class="s1">EventHandler&lt;TableColumn.CellEditEvent&lt;TacheDO.Task, String&gt;&gt;() {</span>
+                    <span class="s1">@Override</span>
+                    <span class="s0">public void </span><span class="s1">handle(TableColumn.CellEditEvent&lt;TacheDO.Task, String&gt; t) {</span>
+                        <span class="s1">((TacheDO.Task) t.getTableView().getItems().get(t.getTablePosition().getRow())).setDescription(t.getNewValue());</span>
+                    <span class="s1">}</span>
+                <span class="s1">}</span>
+        <span class="s1">);</span>
+
+        <span class="s1">priorityCol.setCellValueFactory(</span><span class="s0">new </span><span class="s1">PropertyValueFactory&lt;TacheDO.Task, String&gt;(</span><span class="s3">&quot;Priority&quot;</span><span class="s1">));</span>
+        <span class="s1">priorityCol.setCellFactory(TextFieldTableCell.forTableColumn());</span>
+        <span class="s1">priorityCol.setOnEditCommit(</span><span class="s0">new </span><span class="s1">EventHandler&lt;TableColumn.CellEditEvent&lt;TacheDO.Task, String&gt;&gt;() {</span>
+                    <span class="s1">@Override</span>
+                    <span class="s0">public void </span><span class="s1">handle(TableColumn.CellEditEvent&lt;TacheDO.Task, String&gt; t) {</span>
+                        <span class="s1">((TacheDO.Task) t.getTableView().getItems().get(t.getTablePosition().getRow())).setPriority(t.getNewValue());</span>
+                    <span class="s1">}</span>
+                <span class="s1">}</span>
+        <span class="s1">);</span>
+
+        <span class="s1">shareCol.setCellValueFactory(</span><span class="s0">new </span><span class="s1">PropertyValueFactory&lt;TacheDO.Task, String&gt;(</span><span class="s3">&quot;Share&quot;</span><span class="s1">));</span>
+        <span class="s1">shareCol.setCellFactory(TextFieldTableCell.forTableColumn());</span>
+        <span class="s1">shareCol.setOnEditCommit(</span><span class="s0">new </span><span class="s1">EventHandler&lt;TableColumn.CellEditEvent&lt;TacheDO.Task, String&gt;&gt;() {</span>
+                    <span class="s1">@Override</span>
+                    <span class="s0">public void </span><span class="s1">handle(TableColumn.CellEditEvent&lt;TacheDO.Task, String&gt; t) {</span>
+                        <span class="s1">((TacheDO.Task) t.getTableView().getItems().get(t.getTablePosition().getRow())).setShare(t.getNewValue());</span>
+                    <span class="s1">}</span>
+                <span class="s1">}</span>
+        <span class="s1">);</span>
+
+        <span class="s1">tabletri.setItems(data);</span>
+        <span class="s1">tabletri.getColumns().addAll(dayCol, descriptionCol, deadlineCol, priorityCol, shareCol); </span><span class="s2">// Place the column headings in tabletri.</span>
+
+        <span class="s2">// On définit la largeur : width</span>
+        <span class="s1">tabletri.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);</span>
+        <span class="s1">dayCol.setMinWidth(</span><span class="s4">80</span><span class="s1">);</span>
+        <span class="s1">descriptionCol.setMinWidth(</span><span class="s4">280</span><span class="s1">);</span>
+        <span class="s1">deadlineCol.setMinWidth(</span><span class="s4">80</span><span class="s1">);</span>
+        <span class="s1">priorityCol.setMinWidth(</span><span class="s4">60</span><span class="s1">);</span>
+        <span class="s1">shareCol.setMinWidth(</span><span class="s4">60</span><span class="s1">);</span>
+
+        <span class="s2">//Créez des champs de texte afin que l’utilisateur puisse entrer de nouvelles tâches dans le tableau.</span>
+        <span class="s1">DatePicker addDay = </span><span class="s0">new </span><span class="s1">DatePicker();</span>
+        <span class="s1">TextField addDescription = </span><span class="s0">new </span><span class="s1">TextField();</span>
+        <span class="s1">DatePicker addDeadline = </span><span class="s0">new </span><span class="s1">DatePicker();</span>
+        <span class="s1">TextField addPriority = </span><span class="s0">new </span><span class="s1">TextField();</span>
+        <span class="s1">TextField addShare = </span><span class="s0">new </span><span class="s1">TextField();</span>
+
+        <span class="s2">// Définir le texte initial dans les champs.</span>
+        <span class="s1">addDay.setValue(LocalDate.now());</span>
+        <span class="s1">addDescription.setText(</span><span class="s3">&quot;Task description&quot;</span><span class="s1">);</span>
+        <span class="s1">addDeadline.setValue(LocalDate.now());</span>
+        <span class="s1">addPriority.setText(</span><span class="s3">&quot;Priority level..?&quot;</span><span class="s1">);</span>
+        <span class="s1">addShare.setText(</span><span class="s3">&quot;Enter the User Name&quot;</span><span class="s1">);</span>
+
+        <span class="s2">// Définir la longueur</span>
+        <span class="s1">addDay.setPrefWidth(</span><span class="s4">120</span><span class="s1">);</span>
+        <span class="s1">addDescription.setPrefWidth(</span><span class="s4">200</span><span class="s1">);</span>
+        <span class="s1">addDeadline.setPrefWidth(</span><span class="s4">120</span><span class="s1">);</span>
+        <span class="s1">addPriority.setPrefWidth(</span><span class="s4">65</span><span class="s1">);</span>
+        <span class="s1">addShare.setPrefWidth(</span><span class="s4">65</span><span class="s1">);</span>
+
+        <span class="s2">// // Creation du boutton pour ajouter des taches</span>
+        <span class="s1">Button btnAdd = </span><span class="s0">new </span><span class="s1">Button(</span><span class="s3">&quot;Add Task&quot;</span><span class="s1">);</span>
+        <span class="s1">btnAdd.setOnAction(</span><span class="s0">new </span><span class="s1">EventHandler&lt;ActionEvent&gt;() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">handle(ActionEvent e)  {</span>
+                <span class="s1">data.add(</span><span class="s0">new </span><span class="s1">TacheDO.Task(addDay.getValue().format(DateTimeFormatter.ofPattern(</span><span class="s3">&quot;dd-MM-yyyy&quot;</span><span class="s1">)),</span>
+                        <span class="s1">addDescription.getText(),</span>
+                        <span class="s1">addDay.getValue().format(DateTimeFormatter.ofPattern(</span><span class="s3">&quot;dd-MM-yyyy&quot;</span><span class="s1">)),</span>
+                        <span class="s1">addPriority.getText(),</span>
+                        <span class="s1">addShare.getText()));</span>
+            <span class="s1">}</span>
+        <span class="s1">});</span>
+
+
+
+        <span class="s2">// Creer un menu qui va nous permettre d'ouvrir et de sauver un fichier</span>
+        <span class="s1">MenuBar menuBar = </span><span class="s0">new </span><span class="s1">MenuBar();</span>
+        <span class="s1">Menu fileMenu = </span><span class="s0">new </span><span class="s1">Menu(</span><span class="s3">&quot;_File&quot;</span><span class="s1">);</span>
+        <span class="s1">MenuItem open = </span><span class="s0">new </span><span class="s1">MenuItem(</span><span class="s3">&quot;Load..&quot;</span><span class="s1">);</span>
+        <span class="s1">MenuItem save = </span><span class="s0">new </span><span class="s1">MenuItem(</span><span class="s3">&quot;Save As..&quot;</span><span class="s1">);</span>
+
+        <span class="s1">fileMenu.getItems().add(open);</span>
+        <span class="s1">fileMenu.getItems().add(save);</span>
+
+        <span class="s1">menuBar.getMenus().add(fileMenu);</span>
+
+
+        <span class="s1">open.setOnAction(</span><span class="s0">new </span><span class="s1">EventHandler&lt;ActionEvent&gt;(){</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">handle(</span><span class="s0">final </span><span class="s1">ActionEvent e) {</span>
+                <span class="s1">File opensFile = fileChooser.showOpenDialog(newStage);</span>
+                <span class="s0">if </span><span class="s1">(opensFile != </span><span class="s0">null</span><span class="s1">) {openFile(opensFile);</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+        <span class="s1">});</span>
+
+        <span class="s1">save.setOnAction(</span><span class="s0">new </span><span class="s1">EventHandler&lt;ActionEvent&gt;(){</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">handle(ActionEvent e) {</span>
+                <span class="s1">fileChooser.setTitle(</span><span class="s3">&quot;Save&quot;</span><span class="s1">);</span>
+                <span class="s1">fileChooser.getExtensionFilters().addAll(</span><span class="s0">new </span><span class="s1">FileChooser.ExtensionFilter(</span><span class="s3">&quot;All Files&quot;</span><span class="s1">, </span><span class="s3">&quot;*.*&quot;</span><span class="s1">));</span>
+                <span class="s1">File savesFile = fileChooser.showSaveDialog(newStage);</span>
+                <span class="s0">if </span><span class="s1">(savesFile != </span><span class="s0">null</span><span class="s1">) {</span>
+                    <span class="s1">saveFile(savesFile,data);</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+        <span class="s1">});</span>
+
+        <span class="s2">//Obtenir les champs de saisie (entry fields) utilisateur dans une ligne (row) horizontale.</span>
+        <span class="s1">hbox1.getChildren().addAll(addDay, addDescription, addDeadline, addPriority, addShare, btnAdd);</span>
+        <span class="s2">//Obtenir tout les items dans un format d'empilement vertical</span>
+        <span class="s1">vBox1.getChildren().addAll(menuBar,hbox1,tabletri);</span>
+
+        <span class="s1">newStage.setTitle(</span><span class="s3">&quot;liste des tâches&quot;</span><span class="s1">);</span>
+        <span class="s1">newStage.setScene(scene1);</span>
+        <span class="s1">newStage.show();</span>
+    <span class="s1">}</span>
+
+    <span class="s0">private static void </span><span class="s1">openFile(File opensFile) {</span>
+        <span class="s0">try</span><span class="s1">{</span>
+            <span class="s1">desktop.open(opensFile);</span>
+        <span class="s1">} </span><span class="s0">catch </span><span class="s1">(IOException ex) {Logger.getLogger(Render.</span><span class="s0">class</span><span class="s1">.getName()).log(Level.SEVERE, </span><span class="s0">null</span><span class="s1">, ex);}}</span>
+
+
+    <span class="s2">//pour pouvoir stocker mes taches dans un fichier</span>
+    <span class="s0">private static void </span><span class="s1">saveFile(File savesFile,ObservableList&lt;TacheDO.Task&gt; data) {</span>
+        <span class="s1">PrintWriter fw = </span><span class="s0">null</span><span class="s1">;</span>
+        <span class="s0">try</span><span class="s1">(BufferedWriter bw = </span><span class="s0">new </span><span class="s1">BufferedWriter(</span><span class="s0">new </span><span class="s1">PrintWriter(savesFile))){</span>
+            <span class="s0">for </span><span class="s1">(TacheDO.Task element:data</span>
+                 <span class="s1">) {</span>
+            <span class="s1">bw.write(element.getDay());</span>
+            <span class="s1">bw.write(</span><span class="s3">&quot;, &quot;</span><span class="s1">);</span>
+            <span class="s1">bw.write(element.getDescription());</span>
+            <span class="s1">bw.write(</span><span class="s3">&quot;, &quot;</span><span class="s1">);</span>
+            <span class="s1">bw.write(element.getDeadline());</span>
+            <span class="s1">bw.write(</span><span class="s3">&quot;, &quot;</span><span class="s1">);</span>
+            <span class="s1">bw.write(element.getPriority());</span>
+            <span class="s1">bw.write(</span><span class="s3">&quot;, &quot;</span><span class="s1">);</span>
+            <span class="s1">bw.write(element.getShare());</span>
+            <span class="s1">bw.newLine();</span>
+            <span class="s1">}</span>
+            <span class="s1">fw.close();</span>
+        <span class="s1">} </span><span class="s0">catch </span><span class="s1">(IOException ex) {Logger.getLogger(Render.</span><span class="s0">class</span><span class="s1">.getName()).log(Level.SEVERE, </span><span class="s0">null</span><span class="s1">, ex);</span>
+        <span class="s1">fw.close();</span>
+        <span class="s1">}}</span>
+<span class="s1">}</span>
+
+
+</pre>
+</body>
+</html>
